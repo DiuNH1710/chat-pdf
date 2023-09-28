@@ -7,8 +7,10 @@ import { uploadToS3 } from "@/lib/s3";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const FileUpload = () => {
+  const router = useRouter();
   const [uploading, setUploading] = React.useState(false);
   const { mutate, isLoading } = useMutation({
     mutationFn: async ({
@@ -34,26 +36,28 @@ const FileUpload = () => {
       const file = acceptedFiles[0];
       if (file.size > 10 * 1024 * 1024) {
         //bigger than 10mb
-        alert("Please upload a smaller file");
+        toast.error("File too large");
         return;
       }
 
       try {
         setUploading(true);
         const data = await uploadToS3(file);
+        console.log("meow", data);
         if (!data?.file_key || !data.file_name) {
           alert("something went wrong!");
           return;
         }
         mutate(data, {
-          onSuccess: (data) => {
-            toast.success(data.message);
+          onSuccess: ({ chat_id }) => {
+            toast.success("Chat created!");
+            router.push(`/chat/${chat_id}`);
           },
           onError: (err) => {
             toast.error("Error creating chat");
+            console.log(err);
           },
         });
-        console.log("data", data);
       } catch (error) {
         console.log(error);
       } finally {
