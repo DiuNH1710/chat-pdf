@@ -8,7 +8,8 @@ export default{
     schema:'./src/lib/db/schema.ts',
     dbCredentials:{
         connectionString: process.env.DATABASE_URL!,
-    }
+    },
+    breakpoints: true
 
 } satisfies Config
 
