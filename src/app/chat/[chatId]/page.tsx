@@ -1,3 +1,4 @@
+import ChatComponent from "@/components/ChatComponent";
 import ChatSideBar from "@/components/ChatSideBar";
 import PDFViewer from "@/components/PDFViewer";
 import { db } from "@/lib/db";
@@ -5,6 +6,7 @@ import { chats } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+
 import React from "react";
 
 type Props = {
@@ -39,7 +41,9 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
           <PDFViewer pdf_url={currentChat?.pdfUrl || ""} />
         </div>
         {/**chat component */}
-        <div className="flex-[3] border-1-4 border-1-slate-200"> </div>
+        <div className="flex-[3] border-1-4 border-1-slate-200">
+          <ChatComponent chatId={parseInt(chatId)} />
+        </div>
       </div>
     </div>
   );
